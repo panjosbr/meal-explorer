@@ -1,4 +1,5 @@
 import 'package:meal_explorer/features/meal_recipes/data/models/ingredient_model.dart';
+import 'package:meal_explorer/features/meal_recipes/domain/entities/ingredient.dart';
 import 'package:meal_explorer/features/meal_recipes/domain/entities/meal_detail.dart';
 
 class MealDetailModel extends MealDetail {
@@ -10,8 +11,14 @@ class MealDetailModel extends MealDetail {
     required super.name,
   });
 
+  static List<MealDetailModel> fromRemoteJsonList(List<dynamic> jsonList) {
+    return jsonList
+        .map((json) => MealDetailModel.fromRemoteJson(json))
+        .toList();
+  }
+
   factory MealDetailModel.fromRemoteJson(Map<String, dynamic> json) {
-    final List<IngredientModel> ingredientModel = extractIngredients(json);
+    final List<Ingredient> ingredientModel = extractIngredients(json);
     return MealDetailModel(
       id: json['idMeal'],
       name: json['strMeal'],
@@ -23,11 +30,8 @@ class MealDetailModel extends MealDetail {
 
   factory MealDetailModel.fromLocalJson(Map<String, dynamic> json) {
     List<dynamic> ingredients = json['ingredients'];
-    final List<IngredientModel> ingredientModels = ingredients
-        .map(
-          (e) =>
-              IngredientModel.fromParam(name: e['name'], measure: e['measure']),
-        )
+    final List<Ingredient> ingredientModels = ingredients
+        .map((e) => Ingredient(name: e['name'], measure: e['measure']))
         .toList();
 
     return MealDetailModel(
@@ -39,8 +43,8 @@ class MealDetailModel extends MealDetail {
     );
   }
 
-  static List<IngredientModel> extractIngredients(Map<String, dynamic> json) {
-    final List<IngredientModel> result = [];
+  static List<Ingredient> extractIngredients(Map<String, dynamic> json) {
+    final List<Ingredient> result = [];
 
     for (int i = 1; i <= 20; i++) {
       final ingredientName = json['strIngredient$i'] as String?;
@@ -48,7 +52,7 @@ class MealDetailModel extends MealDetail {
 
       if (ingredientName != null && ingredientName.trim().isNotEmpty) {
         result.add(
-          IngredientModel(name: ingredientName, measure: measure?.trim() ?? ''),
+          Ingredient(name: ingredientName, measure: measure?.trim() ?? ''),
         );
       }
     }
