@@ -1,4 +1,5 @@
 import 'package:meal_explorer/features/meal_recipes/domain/entities/meal_detail.dart';
+import 'package:meal_explorer/features/meal_recipes/domain/failures.dart';
 import 'package:mocktail/mocktail.dart';
 
 const tMealDetail = MealDetail(
@@ -12,6 +13,7 @@ const tMealDetail = MealDetail(
 const tListMealDetail = [tMealDetail];
 const tIdExample = '1234';
 const tName = 'chicken';
+const tFailure = GeneralFailure('Generic error.');
 
 void registerFallBackValues() {
   registerFallbackValue(tMealDetail);

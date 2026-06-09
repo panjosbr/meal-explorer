@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:meal_explorer/features/meal_recipes/data/exceptions.dart';
 import 'package:meal_explorer/features/meal_recipes/data/models/meal_detail_model.dart';
 import 'package:meal_explorer/features/meal_recipes/domain/entities/meal_detail.dart';
 import 'package:http/http.dart' as http;
@@ -24,10 +25,10 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
       final response = await client.get(uri);
       if (response.statusCode == 200) {
         final jsonMap = jsonDecode(response.body) as Map<String, dynamic>;
-        final mealsList = jsonMap['meals'] as List<dynamic>;
+        final mealsList = jsonMap['meals'] as List<dynamic>?;
 
-        if (mealsList.isEmpty) {
-          throw Exception();
+        if (mealsList == null || mealsList.isEmpty) {
+          throw NotFoundException();
         }
 
         return MealDetailModel.fromRemoteJson(
@@ -35,9 +36,12 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
         );
       }
 
-      throw Exception();
-    } catch (_) {
-      rethrow;
+      throw ServerException(
+        'Erro interno do servidor. Status ${response.statusCode}',
+      );
+    } catch (e) {
+      if (e is NotFoundException || e is ServerException) rethrow;
+      throw InternalException('$e');
     }
   }
 
@@ -49,10 +53,10 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
       final response = await client.get(uri);
       if (response.statusCode == 200) {
         final jsonMap = jsonDecode(response.body) as Map<String, dynamic>;
-        final mealsList = jsonMap['meals'] as List<dynamic>;
+        final mealsList = jsonMap['meals'] as List<dynamic>?;
 
-        if (mealsList.isEmpty) {
-          throw Exception();
+        if (mealsList == null || mealsList.isEmpty) {
+          throw NotFoundException();
         }
 
         return MealDetailModel.fromRemoteJson(
@@ -60,9 +64,12 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
         );
       }
 
-      throw Exception();
-    } catch (_) {
-      rethrow;
+      throw ServerException(
+        'Erro interno do servidor. Status ${response.statusCode}',
+      );
+    } catch (e) {
+      if (e is NotFoundException || e is ServerException) rethrow;
+      throw InternalException('$e');
     }
   }
 
@@ -74,18 +81,21 @@ class MealRemoteDataSourceImpl implements MealRemoteDataSource {
       final response = await client.get(uri);
       if (response.statusCode == 200) {
         final jsonMap = jsonDecode(response.body) as Map<String, dynamic>;
-        final mealsList = jsonMap['meals'] as List<dynamic>;
+        final mealsList = jsonMap['meals'] as List<dynamic>?;
 
-        if (mealsList.isEmpty) {
-          throw Exception();
+        if (mealsList == null || mealsList.isEmpty) {
+          throw NotFoundException();
         }
 
         return MealDetailModel.fromRemoteJsonList(mealsList);
       }
 
-      throw Exception();
-    } catch (_) {
-      rethrow;
+      throw ServerException(
+        'Erro interno do servidor. Status ${response.statusCode}',
+      );
+    } catch (e) {
+      if (e is NotFoundException || e is ServerException) rethrow;
+      throw InternalException('$e');
     }
   }
 }

@@ -1,8 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:meal_explorer/features/meal_recipes/domain/entities/meal_detail.dart';
+import 'package:meal_explorer/features/meal_recipes/domain/failures.dart';
 import 'package:meal_explorer/features/meal_recipes/domain/repositories/meal_repository.dart';
 
 abstract class GetRandomMeal {
-  Future<MealDetail> call();
+  Future<Either<Failure, MealDetail>> call();
 }
 
 class GetRandomMealImpl implements GetRandomMeal {
@@ -11,7 +13,7 @@ class GetRandomMealImpl implements GetRandomMeal {
   GetRandomMealImpl(this.repository);
 
   @override
-  Future<MealDetail> call() async {
+  Future<Either<Failure, MealDetail>> call() async {
     return await repository.getRandomMeal();
   }
 }
