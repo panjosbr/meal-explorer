@@ -14,6 +14,16 @@ const tListMealDetail = [tMealDetail];
 const tIdExample = '1234';
 const tName = 'chicken';
 const tFailure = GeneralFailure('Generic error.');
+const tFavoriteMeals = [
+  MealDetail(
+    id: '123',
+    name: 'A',
+    imageUrl: '',
+    instructions: '',
+    ingredients: [],
+  ),
+  tMealDetail,
+];
 
 void registerFallBackValues() {
   registerFallbackValue(tMealDetail);
